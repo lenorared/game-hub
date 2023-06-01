@@ -17,12 +17,15 @@ const GameGrid = () => {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    apiClient.get<FetchGamesResponse>('/games')
+    const controller = new AbortController();
+
+    apiClient
+    .get<FetchGamesResponse>('/games', { signal: controller.signal})
     .then(res => {
         setGames(res.data.results)
     })
-    .catch(err => setError(err.message))
-  })
+    .catch(err => setError(err.message));
+   }, []);
 
   return (
     <>
