@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import apiClient from "../services/api-client";
+import { AxiosRequestConfig } from "axios";
 
 interface FetchResponse<T> {
     count: number;
     results: T[];
 }
 
-const useData = <T>(endpoint: string) => {
+const useData = <T>(endpoint: string, requestConfig?: AxiosRequestConfig, deps?: any[]) => {
+    console.log('inside use data hook, genre is: '); console.log(requestConfig)
     const [data, setData] = useState<T[]>([]);
     const [error, setError] = useState('');
     const [isLoading, setLoading] = useState(false)
@@ -16,7 +18,7 @@ const useData = <T>(endpoint: string) => {
     
         setLoading(true)
         apiClient
-        .get<FetchResponse<T>>(endpoint, { signal: controller.signal})
+        .get<FetchResponse<T>>(endpoint, { signal: controller.signal, ...requestConfig}) //axios request config object
         .then(res => {
             setData(res.data.results)
             setLoading(false)
@@ -25,8 +27,8 @@ const useData = <T>(endpoint: string) => {
         setError(err.message)
         setLoading(false)
         });
-        }, []); //array of dependencies
-
+        }, deps ? [...deps] : []); //array of dependencies. How to send a 2nd request when Genre changes
+        // if any of these dependencies changes, useEffect we re-run and refetch the data from the server
         return {data, error, isLoading};
 }
 
