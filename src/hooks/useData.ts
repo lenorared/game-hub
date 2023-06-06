@@ -8,7 +8,6 @@ interface FetchResponse<T> {
 }
 
 const useData = <T>(endpoint: string, requestConfig?: AxiosRequestConfig, deps?: any[]) => {
-    console.log('inside use data hook, genre is: '); console.log(requestConfig)
     const [data, setData] = useState<T[]>([]);
     const [error, setError] = useState('');
     const [isLoading, setLoading] = useState(false)
