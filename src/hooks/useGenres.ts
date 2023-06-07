@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import useData from "./useData";
 
 export interface Genre {
